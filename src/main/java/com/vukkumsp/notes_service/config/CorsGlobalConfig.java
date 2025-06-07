@@ -15,7 +15,11 @@ public class CorsGlobalConfig {
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://notes.vukkumsp.com")); // or ["http://localhost:3000"]
+        config.setAllowedOrigins(Arrays.asList(
+                "http://localhost:5173",
+                "http://notes.vukkumsp.com",
+                "https://notes.vukkumsp.com"
+        )); // or ["http://localhost:3000"]
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true); // optional, for cookies/auth headers
