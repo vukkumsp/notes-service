@@ -1,4 +1,0 @@
-CREATE TABLE IF NOT EXISTS note (
-    id SERIAL PRIMARY KEY,
-    content TEXT NOT NULL
-);

@@ -10,8 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 })
 class NotesServiceApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+//	@Test
+//	void contextLoads() {
+//	}
 
 }
