@@ -42,24 +42,6 @@ public class DataSeeder {
                 .doOnError(e -> System.err.println("❌ Failed to delete table data: " + e.getMessage()))
                 .subscribe();
 
-//        databaseClient.sql("""
-//            CREATE OR REPLACE FUNCTION set_updated_at()
-//            RETURNS TRIGGER AS $$
-//            BEGIN
-//                NEW.updated_at = NOW();
-//                RETURN NEW;
-//            END;
-//            $$ LANGUAGE plpgsql;
-//        """).then().subscribe();
-//
-//        databaseClient.sql("""
-//            CREATE TRIGGER trigger_set_updated_at
-//            BEFORE UPDATE ON notes
-//            FOR EACH ROW
-//            EXECUTE FUNCTION set_updated_at();
-//        """).then().subscribe();
-
-
         databaseClient.sql("SELECT COUNT(*) AS cnt FROM note")
                         .map(row -> row.get("cnt", Long.class))
                         .one().flatMap(count -> {
@@ -102,42 +84,5 @@ public class DataSeeder {
                         .subscribe(result -> {
                             System.out.println("Result: " + result);
                         });
-
-//        databaseClient.sql("DELETE FROM note")
-//                .then()
-//                .subscribe();
-//
-//        databaseClient.sql("INSERT INTO note (content) VALUES ('data1')")
-//                .then()
-//                .subscribe();
-//
-//        databaseClient.sql("INSERT INTO note (content) VALUES ('data2')")
-//                .then()
-//                .subscribe();
-//
-//        databaseClient.sql("INSERT INTO note (content) VALUES ('data3')")
-//                .then()
-//                .subscribe();
-
-//        Flux<String> data = Flux.just("data1", "data2", "data3");
-//
-//        databaseClient.sql("DELETE FROM note")
-//                .then()
-//                .thenMany(
-//                        data.flatMap(content ->
-//                                databaseClient.sql("INSERT INTO note (content) VALUES (:content)")
-//                                        .bind("content", content)
-//                                        .then()
-//                        )
-//                )
-//                .subscribe(
-//                        null,
-//                        error -> {
-//                            System.err.println("💥 Seeding failed: " + error);
-//                            error.printStackTrace();
-//                        },
-//                        () -> System.out.println("✅ Seeding completed.")
-//                );
-
     }
 }
