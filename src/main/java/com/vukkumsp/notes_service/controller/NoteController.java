@@ -3,13 +3,14 @@ package com.vukkumsp.notes_service.controller;
 import com.vukkumsp.notes_service.repository.Note;
 import com.vukkumsp.notes_service.repository.NoteRepository;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/notes")
+@RequestMapping("/api")
 public class NoteController {
 
     private final NoteRepository noteRepo;
@@ -18,8 +19,13 @@ public class NoteController {
         this.noteRepo = noteRepo;
     }
 
-    @GetMapping
+    @GetMapping("/notes")
     public Flux<Note> getAllNotes(){
         return noteRepo.findAll();
+    }
+
+    @GetMapping("/notes/{id}")
+    public Mono<Note> getNote(@PathVariable Long id){
+        return noteRepo.findById(id);
     }
 }
