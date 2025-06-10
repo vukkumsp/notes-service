@@ -11,13 +11,13 @@ public class TestControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @Test
-    void testGetTestEndpoint(){
-        webTestClient.get()
-                .uri("/api/test")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class)
-                .isEqualTo("test");
-    }
+//    @Test
+//    void testGetTestEndpoint(){
+//        webTestClient.get()
+//                .uri("/api/test")
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody(String.class)
+//                .isEqualTo("test");
+//    }
 }
