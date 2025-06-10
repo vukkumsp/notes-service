@@ -12,10 +12,15 @@ public class JwtUtil {
     // Secret key (for demo, you can move this to `application.properties` or env)
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
+    // Token duration
+    private static final long duration = 3600000;
+
     // Generate JWT Token
     public static String generateToken(String subject, String role) {
         long nowMillis = System.currentTimeMillis();
-        long expirationMillis = nowMillis + 3600000; // 1 hour
+        long expirationMillis = nowMillis + duration; // 1 hour
+
+        System.out.println("expirationMillis : "+expirationMillis);
 
         return Jwts.builder()
                 .setSubject(subject)
@@ -24,6 +29,10 @@ public class JwtUtil {
                 .setExpiration(new Date(expirationMillis))
                 .signWith(key)
                 .compact();
+    }
+
+    public static long getDuration(){
+        return duration;
     }
 
     //Validate Guest token
