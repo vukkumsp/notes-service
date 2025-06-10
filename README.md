@@ -1,5 +1,5 @@
 #  Notes Service
-
+[![build](https://github.com/vukkumsp/notes-service/actions/workflows/spring-build.yml/badge.svg)](https://github.com/vukkumsp/notes-service/actions/workflows/spring-build.yml)
 
 ## Requirements
 
