@@ -27,7 +27,12 @@ public class NoteController {
     }
 
     @PostMapping("/notes")
-    public Boolean postNote(){
-        return true;
+    public Mono<Note> updateNote(@RequestBody Note note){
+        return noteRepo.save(note);
+    }
+
+    @PutMapping("/notes")
+    public Mono<Note> addNote(@RequestBody Note note){
+        return noteRepo.save(note);
     }
 }
