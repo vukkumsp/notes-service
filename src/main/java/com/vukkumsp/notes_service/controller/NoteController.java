@@ -3,6 +3,8 @@ package com.vukkumsp.notes_service.controller;
 import com.vukkumsp.notes_service.repository.Note;
 import com.vukkumsp.notes_service.repository.NoteRepository;
 import com.vukkumsp.notes_service.service.NoteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -11,11 +13,8 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api")
 public class NoteController {
 
-    private final NoteService noteService;
-
-    public NoteController(NoteService NoteService){
-        this.noteService = noteService;
-    }
+    @Autowired
+    private NoteService noteService;
 
     @GetMapping("/notes")
     public Flux<Note> getAllNotes(){
@@ -35,5 +34,10 @@ public class NoteController {
     @PutMapping("/notes")
     public Mono<Note> addNote(@RequestBody Note note){
         return this.noteService.addNote(note);
+    }
+
+    @DeleteMapping("/notes/{id}")
+    public Mono<ResponseEntity<?>> deleteNote(@PathVariable Long id){
+        return this.noteService.deleteNote(id).then(Mono.just(ResponseEntity.ok().build()));
     }
 }

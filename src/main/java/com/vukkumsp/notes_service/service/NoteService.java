@@ -38,7 +38,7 @@ public class NoteService {
         return noteRepo.save(note);
     }
 
-    @CacheEvict(value = "notes", key = "#notes.id")
+    @CacheEvict(value = "notes", key = "#id")
     public Mono<Void> deleteNote(Long id){
         return noteRepo.deleteById(id);
     }
