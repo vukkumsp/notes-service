@@ -29,7 +29,7 @@ public class NoteService {
         return this.noteRepo.findById(id);
     }
 
-    @CachePut(value = "notes", key = "#notes.id")
+    @CachePut(value = "notes", key = "#note.id")
     public Mono<Note> updateNote(Note note){
         return noteRepo.save(note);
     }
