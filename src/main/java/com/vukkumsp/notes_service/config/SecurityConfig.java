@@ -1,28 +1,20 @@
 package com.vukkumsp.notes_service.config;
 
-import com.vukkumsp.notes_service.security.JwtAuthenticationFilter;
+import com.vukkumsp.notes_service.security.AdminJwtAuthenticationFilter;
+import com.vukkumsp.notes_service.security.GuestJwtAuthenticationFilter;
 import com.vukkumsp.notes_service.security.JwtDummyAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
-import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 
@@ -31,7 +23,10 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     @Autowired
-    JwtAuthenticationFilter jwtAuthFilter;
+    GuestJwtAuthenticationFilter guestJwtAuthFilter;
+
+    @Autowired
+    AdminJwtAuthenticationFilter adminJwtAuthFilter;
 
     @Autowired
     JwtDummyAuthFilter dummyFilter;
@@ -56,18 +51,36 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain guestSecurityFilterChain(ServerHttpSecurity http) {
         return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(Customizer.withDefaults())
-                .addFilterBefore(jwtAuthFilter, SecurityWebFiltersOrder.AUTHORIZATION)
+                .addFilterBefore(guestJwtAuthFilter, SecurityWebFiltersOrder.AUTHORIZATION)
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                        .pathMatchers("/api/token/guest").permitAll()
-                        .pathMatchers("/api/notes").hasRole("GUEST")
+                        .pathMatchers(HttpMethod.GET, "/api/token/guest").permitAll()
+//                        .pathMatchers(HttpMethod.GET, "/api/login").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/notes").hasRole("GUEST")
+                        .pathMatchers(HttpMethod.POST, "/api/login").hasRole("GUEST")
                         .anyExchange()
                         .authenticated()
                 )
                 .build();
     }
 
+    @Bean
+    public SecurityWebFilterChain adminSecurityFilterChain(ServerHttpSecurity http) {
+        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .cors(Customizer.withDefaults())
+                .addFilterBefore(adminJwtAuthFilter, SecurityWebFiltersOrder.AUTHORIZATION)
+                .authorizeExchange(exchange -> exchange
+                        .pathMatchers(HttpMethod.OPTIONS).permitAll()
+//                        .pathMatchers(HttpMethod.POST, "/api/login").permitAll()
+//                        .pathMatchers(HttpMethod.GET, "/api/token/admin").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/notes").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.GET, "/api/notes").hasRole("ADMIN")
+                        .anyExchange()
+                        .authenticated()
+                )
+                .build();
+    }
 }

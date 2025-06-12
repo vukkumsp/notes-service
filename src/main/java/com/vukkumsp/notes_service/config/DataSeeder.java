@@ -14,14 +14,12 @@ public class DataSeeder {
         this.databaseClient = databaseClient;
     }
 
-    @PostConstruct
-    public void seed() {
+    private void configTables(){
         databaseClient.sql("DROP TABLE IF EXISTS note")
                 .then()
                 .doOnSuccess(v -> System.out.println("✅ Deleted 'note' table"))
                 .doOnError(e -> System.err.println("❌ Failed to delete table: " + e.getMessage()))
                 .subscribe();
-
 
         databaseClient.sql("""
             CREATE TABLE IF NOT EXISTS note (
@@ -34,6 +32,57 @@ public class DataSeeder {
                 .doOnSuccess(v -> System.out.println("✅ Created 'note' table"))
                 .doOnError(e -> System.err.println("❌ Failed to create table: " + e.getMessage()))
                 .subscribe();
+
+        databaseClient.sql("DROP TABLE IF EXISTS auth")
+                .then()
+                .doOnSuccess(v -> System.out.println("✅ Deleted 'auth' table"))
+                .doOnError(e -> System.err.println("❌ Failed to delete table: " + e.getMessage()))
+                .subscribe();
+
+        databaseClient.sql("""
+            CREATE TABLE IF NOT EXISTS auth (
+            id SERIAL PRIMARY KEY,
+            username TEXT NOT NULL,
+            password TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT NOW(),
+            updated_at TIMESTAMP DEFAULT NOW())
+        """).then()
+                .doOnSuccess(v -> System.out.println("✅ Created 'auth' table"))
+                .doOnError(e -> System.err.println("❌ Failed to create table: " + e.getMessage()))
+                .subscribe();
+    }
+
+    @PostConstruct
+    public void seed() {
+
+        configTables();
+
+        databaseClient.sql("DELETE FROM auth")
+                .then()
+                .doOnSuccess(v -> System.out.println("✅ Deleted 'auth' table data"))
+                .doOnError(e -> System.err.println("❌ Failed to delete table data: " + e.getMessage()))
+                .subscribe();
+
+        databaseClient.sql("SELECT COUNT(*) AS cnt FROM auth")
+                .map(row -> row.get("cnt", Long.class))
+                .one().flatMap(count -> {
+                    if(count != null && count == 0){
+                        databaseClient.sql("""
+                                        INSERT INTO auth (username, password) VALUES(
+                                            'admin',
+                                            'admin'
+                                        )
+                                        """)
+                                .then()
+                                .doOnSuccess(v -> System.out.println("✅ Inserted into 'auth' table"))
+                                .doOnError(e -> System.err.println("❌ Failed to insert into table: " + e.getMessage()))
+                                .subscribe();
+                    }
+                    return Mono.just(count!=null?count:0);
+                })
+                .subscribe(result -> {
+                    System.out.println("Result: " + result);
+                });
 
         databaseClient.sql("DELETE FROM note")
                 .then()

@@ -35,6 +35,15 @@ public class JwtUtil {
         return duration;
     }
 
+    // Validate and parse the JWT token
+    public static Claims getClaimsFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
     //Validate Guest token
     public static boolean isGuestTokenValid(String guestToken){
         Claims claims = getClaimsFromToken(guestToken);
@@ -43,12 +52,12 @@ public class JwtUtil {
         return subject.equalsIgnoreCase("quest_user") && role.equalsIgnoreCase("GUEST");
     }
 
-    // Validate and parse the JWT token
-    public static Claims getClaimsFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+    //Validate Guest token
+    public static boolean isTokenValid(String subject, String role, String jwtToken){
+        Claims claims = getClaimsFromToken(jwtToken);
+        String claimSubject = claims.getSubject();
+        String claimRole = claims.get("role", String.class);
+        return claimSubject.equalsIgnoreCase(subject) &&
+                claimRole.equalsIgnoreCase(role);
     }
 }

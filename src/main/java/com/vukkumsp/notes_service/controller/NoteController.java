@@ -2,10 +2,7 @@ package com.vukkumsp.notes_service.controller;
 
 import com.vukkumsp.notes_service.repository.Note;
 import com.vukkumsp.notes_service.repository.NoteRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -27,5 +24,10 @@ public class NoteController {
     @GetMapping("/notes/{id}")
     public Mono<Note> getNote(@PathVariable Long id){
         return noteRepo.findById(id);
+    }
+
+    @PostMapping("/notes")
+    public Boolean postNote(){
+        return true;
     }
 }
