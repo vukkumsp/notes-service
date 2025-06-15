@@ -37,8 +37,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173",
                 "http://localhost:5173/",
-                "http://notes.vukkumsp.com",
-                "https://notes.vukkumsp.com"
+                "https://vukkumsp.github.io/notes-ui-app/"
         )); // or ["http://localhost:3000"]
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
