@@ -34,23 +34,6 @@ public class JwtService {
         this.decoder = NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 
-    public String generateToken(String username, Map<String, Object> additionalClaims) {
-        Instant now = Instant.now();
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("your-app-name")
-                .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
-                .subject(username)
-                .claims(claimsMap -> {
-                    if(additionalClaims != null) {
-                        claimsMap.putAll(additionalClaims);
-                    }
-                })
-                .build();
-
-        return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-    }
-
     public Jwt validateToken(String token) {
         return decoder.decode(token); // throws exception if invalid or expired
     }

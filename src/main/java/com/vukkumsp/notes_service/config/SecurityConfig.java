@@ -1,8 +1,5 @@
 package com.vukkumsp.notes_service.config;
 
-import com.vukkumsp.notes_service.security.AdminJwtAuthenticationFilter;
-import com.vukkumsp.notes_service.security.GuestJwtAuthenticationFilter;
-import com.vukkumsp.notes_service.security.JwtDummyAuthFilter;
 import com.vukkumsp.notes_service.security.UserJwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,17 +21,8 @@ import java.util.Arrays;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
-//    @Autowired
-//    GuestJwtAuthenticationFilter guestJwtAuthFilter;
-//
-//    @Autowired
-//    AdminJwtAuthenticationFilter adminJwtAuthFilter;
-
     @Autowired
     UserJwtAuthenticationFilter userJwtAuthFilter;
-
-    @Autowired
-    JwtDummyAuthFilter dummyFilter;
 
     @Value("${spring.application.name}")
     private String appName;
@@ -55,39 +43,6 @@ public class SecurityConfig {
 
         return new CorsWebFilter(source);
     }
-
-//    @Bean
-//    public SecurityWebFilterChain guestSecurityFilterChain(ServerHttpSecurity http) {
-//        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-//                .cors(Customizer.withDefaults())
-//                .addFilterBefore(guestJwtAuthFilter, SecurityWebFiltersOrder.AUTHORIZATION)
-//                .authorizeExchange(exchange -> exchange
-//                        .pathMatchers(HttpMethod.OPTIONS).permitAll()
-//                        .pathMatchers(HttpMethod.GET, "/api/token/guest").permitAll()
-//                        .pathMatchers(HttpMethod.POST, "/api/token/verify").permitAll()
-//                        .pathMatchers(HttpMethod.GET, "/api/notes").hasRole("GUEST")
-//                        .pathMatchers(HttpMethod.POST, "/api/login").hasRole("GUEST")
-//                        .anyExchange()
-//                        .authenticated()
-//                )
-//                .build();
-//    }
-
-//    @Bean
-//    public SecurityWebFilterChain adminSecurityFilterChain(ServerHttpSecurity http) {
-//        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-//                .cors(Customizer.withDefaults())
-//                .addFilterBefore(adminJwtAuthFilter, SecurityWebFiltersOrder.AUTHORIZATION)
-//                .authorizeExchange(exchange -> exchange
-//                        .pathMatchers(HttpMethod.OPTIONS).permitAll()
-//                        .pathMatchers(HttpMethod.POST, "/api/notes").hasRole("ADMIN")
-//                        .pathMatchers(HttpMethod.GET, "/api/notes").hasRole("ADMIN")
-//                        .pathMatchers(HttpMethod.PUT, "/api/notes").hasRole("ADMIN")
-//                        .anyExchange()
-//                        .authenticated()
-//                )
-//                .build();
-//    }
 
     @Bean
     public SecurityWebFilterChain loginSecurityFilterChain(ServerHttpSecurity http) {
