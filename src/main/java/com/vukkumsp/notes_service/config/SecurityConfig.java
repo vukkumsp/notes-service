@@ -56,6 +56,7 @@ public class SecurityConfig {
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
                         .pathMatchers(HttpMethod.GET, "/api/token/guest").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/token/verify").permitAll()
 //                        .pathMatchers(HttpMethod.GET, "/api/login").permitAll()
                         .pathMatchers(HttpMethod.GET, "/api/notes").hasRole("GUEST")
                         .pathMatchers(HttpMethod.POST, "/api/login").hasRole("GUEST")
