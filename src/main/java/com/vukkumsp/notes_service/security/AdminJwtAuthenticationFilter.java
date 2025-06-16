@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collections;
 import java.util.List;
 
-@Component
+//@Component
 public class AdminJwtAuthenticationFilter implements WebFilter {
 
     @Override
