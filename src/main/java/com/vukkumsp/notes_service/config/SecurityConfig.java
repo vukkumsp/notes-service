@@ -37,16 +37,13 @@ public class SecurityConfig {
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true); // optional, for cookies/auth headers
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return new CorsWebFilter(source);
     }
 
     @Bean
     public SecurityWebFilterChain loginSecurityFilterChain(ServerHttpSecurity http) {
-        System.out.println("appName from inside chain : "+appName);
         return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(Customizer.withDefaults())
                 .addFilterBefore(userJwtAuthFilter, SecurityWebFiltersOrder.AUTHORIZATION)

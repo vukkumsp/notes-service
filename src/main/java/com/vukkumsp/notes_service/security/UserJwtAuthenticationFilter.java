@@ -34,38 +34,23 @@ public class UserJwtAuthenticationFilter implements WebFilter {
         ServerHttpRequest request = exchange.getRequest();
         String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
-        System.out.println("before appName : "+appName);
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             String token = authHeader.substring(7);
-            System.out.println("authHeader : "+authHeader);
 
             try {
                 Jwt jwt = jwtService.validateToken(token);
-//                String apn = jwt.getIssuer().getAuthority();
                 String username = jwt.getSubject();
-//                System.out.println("apn : "+apn);
-                System.out.println("appName : "+appName);
-
-//                Claims claims = JwtUtil.getClaimsFromToken(token);
-//                String username = claims.getSubject();
 
                 List<String> roles = Collections.singletonList(appName);
                 List<SimpleGrantedAuthority> authorities = roles.stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_"+role))
                         .toList();
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
-                System.out.println("auth : "+auth.getName());
-                System.out.println("authorities : "+authorities);
 
-                Mono<Void> m = chain.filter(exchange)
+                return chain.filter(exchange)
                         .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
-
-                System.out.println("m : "+m.hasElement());
-
-                return m;
             }
             catch(JwtException e){
-                System.out.println("exception!!");
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();
             }
