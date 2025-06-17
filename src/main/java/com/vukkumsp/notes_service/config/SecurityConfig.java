@@ -32,6 +32,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173",
+                "http://localhost:4200",
                 "https://vukkumsp.github.io"
         )); // or ["http://localhost:3000"]
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
