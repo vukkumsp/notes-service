@@ -2,6 +2,13 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS builder
 WORKDIR /app
 COPY . .
+RUN mvn clean package -DskipTests
+
+# Stage 2: Run the app
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
+
 # Add Aiven CA certificate to JVM truststore
 COPY src/main/resources/certs/ca.pem /app/ca.pem
 RUN keytool -importcert \
@@ -11,12 +18,6 @@ RUN keytool -importcert \
     -file /app/ca.pem \
     -keystore $JAVA_HOME/lib/security/cacerts \
     -storepass changeit
-RUN mvn clean package -DskipTests
-
-# Stage 2: Run the app
-FROM eclipse-temurin:21-jdk
-WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
 
 # Read PORT from env and run
 ENV PORT 8080
