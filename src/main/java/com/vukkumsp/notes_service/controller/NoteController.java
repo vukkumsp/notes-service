@@ -26,12 +26,12 @@ public class NoteController {
         return this.noteService.getNote(id);
     }
 
-    @PostMapping("/notes")
+    @PutMapping("/notes")
     public Mono<Note> updateNote(@RequestBody Note note){
         return this.noteService.updateNote(note);
     }
 
-    @PutMapping("/notes")
+    @PostMapping("/notes")
     public Mono<Note> addNote(@RequestBody Note note){
         return this.noteService.addNote(note);
     }
